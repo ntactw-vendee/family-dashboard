@@ -34,23 +34,18 @@
     </div>
 
 <script>
-    const REPO_OWNER = "ntactw-vendee";
+      const REPO_OWNER = "ntactw-vendee";
     const REPO_NAME = "family-dashboard";
     const FILE_PATH = "data.json";
 
-    // 讀取用 Raw 網址（最快、最直覺）
-    const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${FILE_PATH}`;
-    
-    // 寫入/更新用 GitHub API 網址
+    // 寫入/更新依然使用 GitHub API
     const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
-    
-    let fileSha = ""; // 儲存當前檔案的 SHA
+    let fileSha = ""; 
 
-    // 1. 讀取 GitHub 上的 JSON 資料
+    // 1. 讀取：直接抓 Cloudflare 自己託管的 data.json（秒開、絕對不 404）
     async function loadData() {
         try {
-            // 加上時間戳記 ?t=... 防止瀏覽器快取舊資料
-            const response = await fetch(rawUrl + "?t=" + new Date().getTime());
+            const response = await fetch("./data.json?t=" + new Date().getTime());
             if (!response.ok) throw new Error("無法取得遠端檔案");
             
             const data = await response.json();
@@ -62,6 +57,7 @@
             document.getElementById("data-view").textContent = "讀取失敗：" + error.message;
         }
     }
+
 
     // 2. 寫入/更新 GitHub 上的 JSON 資料
     async function saveToGitHub() {
