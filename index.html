@@ -46,11 +46,15 @@
     // 1. 讀取 GitHub 上的 JSON 資料
     async function loadData() {
         try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            
-            // GitHub API 回傳的內容經過 Base64 編碼，需要解碼
-            const decodedContent = decodeURIComponent(escape(atob(data.content)));
+// 修改成這樣：
+const response = await fetch(apiUrl);
+const data = await response.json();
+
+// 支援中文的 Base64 安全解碼
+const binaryString = atob(data.content.replace(/\s/g, ''));
+const bytes = Uint8Array.from(binaryString, c => c.charCodeAt(0));
+const decodedContent = new TextDecoder('utf-8').decode(bytes);
+
             
             fileSha = data.sha; // 紀錄 SHA
             
