@@ -41,8 +41,7 @@
     // 寫入/更新依然使用 GitHub API
     const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
     let fileSha = ""; 
-
-    // 1. 讀取：直接抓 Cloudflare 自己託管的 data.json（秒開、絕對不 404）
+    // 1. 讀取：直接抓 Cloudflare 上的 data.json
     async function loadData() {
         try {
             const response = await fetch("./data.json?t=" + new Date().getTime());
@@ -57,6 +56,7 @@
             document.getElementById("data-view").textContent = "讀取失敗：" + error.message;
         }
     }
+
 
 
     // 2. 寫入/更新 GitHub 上的 JSON 資料
